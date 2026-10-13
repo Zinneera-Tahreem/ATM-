@@ -1,833 +1,914 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXUS Smart ATM | Account Creasdftion, Credit, Debit & Balance</title>
-  <meta name="description" content="Next generation digital ATM portal with Supabase integration. Create accounts, credit deposits, debit withdrawals, and monitor real-time balance.">
-  <meta name="keywords" content="ATM landing page, account creation, cash credit, cash debit, account balance, supabase, account log">
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Supabase JS Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Smart ATM | Account Creasdftion, Credit, Debit & Balance</title>
+    <meta name="description"
+        content="Next generation digital ATM portal with Supabase integration. Create accounts, credit deposits, debit withdrawals, and monitor real-time balance.">
+    <meta name="keywords"
+        content="ATM landing page, account creation, cash credit, cash debit, account balance, supabase, account log">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
-  <!-- Background Decorative Grid & Glowing Orbs -->
-  <div class="bg-grid"></div>
-  <div class="glow-orb glow-orb-1"></div>
-  <div class="glow-orb glow-orb-2"></div>
+    <!-- Background Decorative Grid & Glowing Orbs -->
+    <div class="bg-grid"></div>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
 
-  <!-- Navigation Bar -->
-  <header class="navbar">
-    <div class="container nav-container">
-      <a href="#" class="brand">
-        <div class="brand-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <rect x="2" y="5" width="20" height="14" rx="2" />
-            <line x1="2" y1="10" x2="22" y2="10" />
-            <circle cx="7" cy="15" r="1.5" />
-          </svg>
-        </div>
-        <div class="brand-text">
-          <span class="brand-name">NEXUS ATM</span>
-          <span class="brand-badge">Smart Banking OS</span>
-        </div>
-      </a>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                        <circle cx="7" cy="15" r="1.5" />
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">NEXUS ATM</span>
+                    <span class="brand-badge">Smart Banking OS</span>
+                </div>
+            </a>
 
-      <ul class="nav-links">
-        <li><a href="#metrics-section" class="nav-link">Overview</a></li>
-        <li><a href="#workbench-section" class="nav-link">ATM Terminal</a></li>
-        <li><a href="#transactions-section" class="nav-link">Account Logs</a></li>
-        <li><a href="#features-section" class="nav-link">Smart Features</a></li>
-      </ul>
+            <ul class="nav-links">
+                <li><a href="#metrics-section" class="nav-link">Overview</a></li>
+                <li><a href="#workbench-section" class="nav-link">ATM Terminal</a></li>
+                <li><a href="#transactions-section" class="nav-link">Account Logs</a></li>
+                <li><a href="#features-section" class="nav-link">Smart Features</a></li>
+            </ul>
 
-      <div class="nav-actions">
-        <!-- Supabase Cloud Sync Indicator -->
-        <button id="supabase-status-pill" class="supabase-status-pill" title="Click to view Supabase Cloud details" aria-label="Supabase Status">
-          <span class="supabase-dot"></span>
-          <span id="supabase-status-label">Supabase: Connecting...</span>
-        </button>
+            <div class="nav-actions">
+                <!-- Supabase Cloud Sync Indicator -->
+                <button id="supabase-status-pill" class="supabase-status-pill"
+                    title="Click to view Supabase Cloud details" aria-label="Supabase Status">
+                    <span class="supabase-dot"></span>
+                    <span id="supabase-status-label">Supabase: Connecting...</span>
+                </button>
 
-        <!-- Active User Account Selector -->
-        <div class="account-selector-box" title="Switch Active Account">
-          <label for="user-account-select">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            ACC
-          </label>
-          <select id="user-account-select" class="account-select-dropdown" aria-label="Select User Account">
-            <option value="">Loading accounts...</option>
-          </select>
-        </div>
+                <!-- Active User Account Selector -->
+                <div class="account-selector-box" title="Switch Active Account">
+                    <label for="user-account-select">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        ACC
+                    </label>
+                    <select id="user-account-select" class="account-select-dropdown" aria-label="Select User Account">
+                        <option value="">Loading accounts...</option>
+                    </select>
+                </div>
 
-        <!-- Create Account Action Button -->
-        <button id="btn-show-create-account" class="btn-open-create-account" aria-label="Open Account Creation Dialog">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Create Account
-        </button>
+                <!-- Create Account Action Button -->
+                <button id="btn-show-create-account" class="btn-open-create-account"
+                    aria-label="Open Account Creation Dialog">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Create Account
+                </button>
 
-        <!-- Currency Selector -->
-        <select id="currency-selector" class="custom-select" style="padding: 6px 10px; width: auto; font-weight: 600;" aria-label="Select Currency">
-          <option value="INR">INR (₹)</option>
-          <option value="USD">USD ($)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="GBP">GBP (£)</option>
-        </select>
+                <!-- Currency Selector -->
+                <select id="currency-selector" class="custom-select"
+                    style="padding: 6px 10px; width: auto; font-weight: 600;" aria-label="Select Currency">
+                    <option value="INR">INR (₹)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                </select>
 
-        <!-- Sound Toggle -->
-        <button id="btn-toggle-sound" class="sound-toggle-btn" title="Toggle ATM Audio Feedback" aria-label="Toggle Sound">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
-          </svg>
-        </button>
+                <!-- Sound Toggle -->
+                <button id="btn-toggle-sound" class="sound-toggle-btn" title="Toggle ATM Audio Feedback"
+                    aria-label="Toggle Sound">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                </button>
 
-        <!-- Theme Toggle (Light / Dark) -->
-        <button id="btn-toggle-theme" class="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
-          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/>
-            <line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container">
-        
-        <!-- Active User Account Profile Card Banner -->
-        <div class="active-user-banner">
-          <div class="active-user-info">
-            <div id="active-user-avatar" class="user-avatar-circle">A</div>
-            <div>
-              <div id="active-user-name" class="active-user-name">Loading Account...</div>
-              <div id="active-user-meta" class="active-user-meta">Account No: #--- • Branch: --- • User ID: #---</div>
+                <!-- Theme Toggle (Light / Dark) -->
+                <button id="btn-toggle-theme" class="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
+                    <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </svg>
+                </button>
             </div>
-          </div>
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <button id="btn-banner-new-acc" class="btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              + Create New Account
-            </button>
-          </div>
         </div>
+    </header>
 
-        <div class="hero-tag">
-          <span class="pulse-dot"></span>
-          ATM TERMINAL #NX-402 • CONNECTED TO SUPABASE (user &amp; account_log)
-        </div>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
 
-        <h1 class="hero-title">
-          Smart ATM Portal: <br>
-          <span class="gradient-text">Account Creation, Credit, Debit &amp; Balance.</span>
-        </h1>
+                <!-- Active User Account Profile Card Banner -->
+                <div class="active-user-banner">
+                    <div class="active-user-info">
+                        <div id="active-user-avatar" class="user-avatar-circle">A</div>
+                        <div>
+                            <div id="active-user-name" class="active-user-name">Loading Account...</div>
+                            <div id="active-user-meta" class="active-user-meta">Account No: #--- • Branch: --- • User
+                                ID: #---</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button id="btn-banner-new-acc" class="btn-primary"
+                            style="padding: 8px 16px; font-size: 0.85rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            + Create New Account
+                        </button>
+                    </div>
+                </div>
 
-        <p class="hero-subtitle">
-          Seamlessly manage user bank accounts, process instant cash credit deposits, withdraw cash debits, and track verified real-time liquidity synced directly with your Supabase database.
-        </p>
+                <div class="hero-tag">
+                    <span class="pulse-dot"></span>
+                    ATM TERMINAL #NX-402 • CONNECTED TO SUPABASE (user &amp; account_log)
+                </div>
 
-        <!-- ==============================================
+                <h1 class="hero-title">
+                    Smart ATM Portal: <br>
+                    <span class="gradient-text">Account Creation, Credit, Debit &amp; Balance.</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Seamlessly manage user bank accounts, process instant cash credit deposits, withdraw cash debits,
+                    and track verified real-time liquidity synced directly with your Supabase database.
+                </p>
+
+                <!-- ==============================================
              CORE FINANCIAL STATS (BALANCE, CREDIT, DEBIT)
              ============================================== -->
-        <div id="metrics-section" class="metrics-grid">
-          
-          <!-- Stat 1: Total Balance -->
-          <article class="metric-card balance-card">
-            <div class="metric-header">
-              <div class="metric-label-group">
-                <div class="metric-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                    <circle cx="12" cy="12" r="2.5" />
-                    <path d="M6 12h.01M18 12h.01" />
-                  </svg>
+                <div id="metrics-section" class="metrics-grid">
+
+                    <!-- Stat 1: Total Balance -->
+                    <article class="metric-card balance-card">
+                        <div class="metric-header">
+                            <div class="metric-label-group">
+                                <div class="metric-icon-box">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                                        <circle cx="12" cy="12" r="2.5" />
+                                        <path d="M6 12h.01M18 12h.01" />
+                                    </svg>
+                                </div>
+                                <span class="metric-title">Available Balance</span>
+                            </div>
+                            <span class="metric-status-badge">
+                                <span class="indicator-active">●</span> LIVE SYNC
+                            </span>
+                        </div>
+
+                        <div class="metric-value-wrap">
+                            <span class="metric-currency currency-symbol-tag">₹</span>
+                            <span id="metric-balance-val" class="metric-amount">0.00</span>
+                        </div>
+
+                        <div class="metric-footer">
+                            <span class="metric-indicator indicator-active">
+                                Credit - Debit Difference
+                            </span>
+                            <button id="btn-toggle-privacy" class="privacy-toggle" title="Hide/Unhide Balance"
+                                aria-label="Toggle Amount Visibility">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Stat 2: Total Amount Credited (Inflow) -->
+                    <article class="metric-card credit-card">
+                        <div class="metric-header">
+                            <div class="metric-label-group">
+                                <div class="metric-icon-box">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <path d="M12 19V5M5 12l7-7 7 7" />
+                                    </svg>
+                                </div>
+                                <span class="metric-title">Total Credited</span>
+                            </div>
+                            <span class="metric-status-badge">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="18 15 12 9 6 15" />
+                                </svg>
+                                INFLOW
+                            </span>
+                        </div>
+
+                        <div class="metric-value-wrap">
+                            <span class="metric-currency currency-symbol-tag">₹</span>
+                            <span id="metric-credit-val" class="metric-amount">0.00</span>
+                        </div>
+
+                        <div class="metric-footer">
+                            <span class="metric-indicator indicator-up">
+                                + Deposits &amp; Inward Credits
+                            </span>
+                            <span id="credit-count-tag">0 Deposits</span>
+                        </div>
+                    </article>
+
+                    <!-- Stat 3: Total Amount Debited (Outflow) -->
+                    <article class="metric-card debit-card">
+                        <div class="metric-header">
+                            <div class="metric-label-group">
+                                <div class="metric-icon-box">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5">
+                                        <path d="M12 5v14M19 12l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                                <span class="metric-title">Total Debited</span>
+                            </div>
+                            <span class="metric-status-badge">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                                OUTFLOW
+                            </span>
+                        </div>
+
+                        <div class="metric-value-wrap">
+                            <span class="metric-currency currency-symbol-tag">₹</span>
+                            <span id="metric-debit-val" class="metric-amount">0.00</span>
+                        </div>
+
+                        <div class="metric-footer">
+                            <span class="metric-indicator indicator-down">
+                                - Cash Withdrawals &amp; Debits
+                            </span>
+                            <span id="debit-count-tag">0 Withdrawals</span>
+                        </div>
+                    </article>
+
                 </div>
-                <span class="metric-title">Available Balance</span>
-              </div>
-              <span class="metric-status-badge">
-                <span class="indicator-active">●</span> LIVE SYNC
-              </span>
             </div>
+        </section>
 
-            <div class="metric-value-wrap">
-              <span class="metric-currency currency-symbol-tag">₹</span>
-              <span id="metric-balance-val" class="metric-amount">0.00</span>
-            </div>
-
-            <div class="metric-footer">
-              <span class="metric-indicator indicator-active">
-                Credit - Debit Difference
-              </span>
-              <button id="btn-toggle-privacy" class="privacy-toggle" title="Hide/Unhide Balance" aria-label="Toggle Amount Visibility">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <!-- Stat 2: Total Amount Credited (Inflow) -->
-          <article class="metric-card credit-card">
-            <div class="metric-header">
-              <div class="metric-label-group">
-                <div class="metric-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M12 19V5M5 12l7-7 7 7"/>
-                  </svg>
-                </div>
-                <span class="metric-title">Total Credited</span>
-              </div>
-              <span class="metric-status-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="18 15 12 9 6 15"/>
-                </svg>
-                INFLOW
-              </span>
-            </div>
-
-            <div class="metric-value-wrap">
-              <span class="metric-currency currency-symbol-tag">₹</span>
-              <span id="metric-credit-val" class="metric-amount">0.00</span>
-            </div>
-
-            <div class="metric-footer">
-              <span class="metric-indicator indicator-up">
-                + Deposits &amp; Inward Credits
-              </span>
-              <span id="credit-count-tag">0 Deposits</span>
-            </div>
-          </article>
-
-          <!-- Stat 3: Total Amount Debited (Outflow) -->
-          <article class="metric-card debit-card">
-            <div class="metric-header">
-              <div class="metric-label-group">
-                <div class="metric-icon-box">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M12 5v14M19 12l-7 7-7-7"/>
-                  </svg>
-                </div>
-                <span class="metric-title">Total Debited</span>
-              </div>
-              <span class="metric-status-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-                OUTFLOW
-              </span>
-            </div>
-
-            <div class="metric-value-wrap">
-              <span class="metric-currency currency-symbol-tag">₹</span>
-              <span id="metric-debit-val" class="metric-amount">0.00</span>
-            </div>
-
-            <div class="metric-footer">
-              <span class="metric-indicator indicator-down">
-                - Cash Withdrawals &amp; Debits
-              </span>
-              <span id="debit-count-tag">0 Withdrawals</span>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ==============================================
+        <!-- ==============================================
          ATM WORKBENCH (VIRTUAL CARD & ATM CONSOLE)
          ============================================== -->
-    <section id="workbench-section" class="container">
-      <div class="atm-workbench-grid">
-        
-        <!-- Left: Virtual ATM Card Showcase -->
-        <div class="card-showcase-panel">
-          <div>
-            <div class="panel-header">
-              <div>
-                <h2 class="panel-title">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2">
-                    <rect x="2" y="5" width="20" height="14" rx="2" />
-                    <line x1="2" y1="10" x2="22" y2="10" />
-                  </svg>
-                  Interactive ATM Card
-                </h2>
-                <p class="panel-subtitle">Dynamic chip card bound to Supabase user account</p>
-              </div>
-              <span id="card-location-badge" class="card-tier-badge">MUMBAI KIOSK</span>
-            </div>
+        <section id="workbench-section" class="container">
+            <div class="atm-workbench-grid">
 
-            <!-- 3D Card Object -->
-            <div class="atm-card-wrapper" title="Hover over card for 3D dynamic tilt effect">
-              <div id="atm-interactive-card" class="atm-chip-card">
-                
-                <div class="card-top">
-                  <div class="card-bank-name">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                      <polyline points="2 17 12 22 22 17"/>
-                      <polyline points="2 12 12 17 22 12"/>
-                    </svg>
-                    NEXUS GLOBAL ATM
-                  </div>
-                  <!-- Contactless Wave -->
-                  <svg class="card-nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
-                    <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
-                    <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
-                  </svg>
-                </div>
+                <!-- Left: Virtual ATM Card Showcase -->
+                <div class="card-showcase-panel">
+                    <div>
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="panel-title">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        stroke="var(--accent-cyan)" stroke-width="2">
+                                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                                        <line x1="2" y1="10" x2="22" y2="10" />
+                                    </svg>
+                                    Interactive ATM Card
+                                </h2>
+                                <p class="panel-subtitle">Dynamic chip card bound to Supabase user account</p>
+                            </div>
+                            <span id="card-location-badge" class="card-tier-badge">MUMBAI KIOSK</span>
+                        </div>
 
-                <div class="card-chip-container">
-                  <div class="card-chip"></div>
-                  <div id="card-uid-badge" style="font-size: 0.7rem; color: #94a3b8; letter-spacing: 0.1em; font-family: var(--font-mono);">
-                    USER ID: #1 • EMV 256-BIT
-                  </div>
-                </div>
+                        <!-- 3D Card Object -->
+                        <div class="atm-card-wrapper" title="Hover over card for 3D dynamic tilt effect">
+                            <div id="atm-interactive-card" class="atm-chip-card">
 
-                <div id="card-number-display" class="card-number">
-                  •••• &nbsp; •••• &nbsp; •••• &nbsp; 000
-                </div>
+                                <div class="card-top">
+                                    <div class="card-bank-name">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                            <polyline points="2 17 12 22 22 17" />
+                                            <polyline points="2 12 12 17 22 12" />
+                                        </svg>
+                                        NEXUS GLOBAL ATM
+                                    </div>
+                                    <!-- Contactless Wave -->
+                                    <svg class="card-nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M8.5 16.5a5 5 0 0 1 0-7" />
+                                        <path d="M12 19a8.5 8.5 0 0 0 0-14" />
+                                        <path d="M15.5 21.5a12 12 0 0 0 0-21" />
+                                    </svg>
+                                </div>
 
-                <div class="card-bottom">
-                  <div class="card-holder-info">
-                    <div class="card-subfield">
-                      <span class="card-field-title">Account Holder</span>
-                      <span id="card-holder-name" class="card-field-value">SELECT ACCOUNT</span>
+                                <div class="card-chip-container">
+                                    <div class="card-chip"></div>
+                                    <div id="card-uid-badge"
+                                        style="font-size: 0.7rem; color: #94a3b8; letter-spacing: 0.1em; font-family: var(--font-mono);">
+                                        USER ID: #1 • EMV 256-BIT
+                                    </div>
+                                </div>
+
+                                <div id="card-number-display" class="card-number">
+                                    •••• &nbsp; •••• &nbsp; •••• &nbsp; 000
+                                </div>
+
+                                <div class="card-bottom">
+                                    <div class="card-holder-info">
+                                        <div class="card-subfield">
+                                            <span class="card-field-title">Account Holder</span>
+                                            <span id="card-holder-name" class="card-field-value">SELECT ACCOUNT</span>
+                                        </div>
+                                        <div class="card-subfield">
+                                            <span class="card-field-title">Branch / City</span>
+                                            <span id="card-branch-name" class="card-field-value">HQ</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-brand-network">
+                                        <div class="network-circle red"></div>
+                                        <div class="network-circle orange"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-subfield">
-                      <span class="card-field-title">Branch / City</span>
-                      <span id="card-branch-name" class="card-field-value">HQ</span>
+
+                    <!-- Card Meta Information -->
+                    <div class="card-quick-meta">
+                        <div class="quick-meta-box">
+                            <div class="quick-meta-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                            </div>
+                            <div class="quick-meta-details">
+                                <span class="quick-meta-label">Total Transactions Logged</span>
+                                <span id="total-tx-count-val" class="quick-meta-val">0 Operations</span>
+                            </div>
+                        </div>
+
+                        <div class="quick-meta-box">
+                            <div class="quick-meta-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </div>
+                            <div class="quick-meta-details">
+                                <span class="quick-meta-label">Supabase Table Sync</span>
+                                <span class="quick-meta-val" style="color: var(--credit-color);">●
+                                    public.account_log</span>
+                            </div>
+                        </div>
                     </div>
-                  </div>
 
-                  <div class="card-brand-network">
-                    <div class="network-circle red"></div>
-                    <div class="network-circle orange"></div>
-                  </div>
                 </div>
 
-              </div>
+                <!-- Right: Interactive ATM Terminal (Credit & Debit) -->
+                <div class="atm-terminal-panel">
+
+                    <!-- Terminal Tabs -->
+                    <div class="terminal-tabs">
+                        <button class="terminal-tab-btn active credit-tab" data-tab="credit">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M12 19V5M5 12l7-7 7 7" />
+                            </svg>
+                            Deposit (Credit)
+                        </button>
+                        <button class="terminal-tab-btn debit-tab" data-tab="debit">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M12 5v14M19 12l-7 7-7-7" />
+                            </svg>
+                            Withdraw (Debit)
+                        </button>
+                    </div>
+
+                    <div class="terminal-body">
+
+                        <!-- Tab Pane 1: Deposit / Credit -->
+                        <div id="credit-pane" class="tab-pane active credit-pane">
+                            <div class="pane-heading">
+                                <h3 class="pane-title" style="color: var(--credit-color);">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="16" />
+                                        <line x1="8" y1="12" x2="16" y2="12" />
+                                    </svg>
+                                    Cash Deposit Terminal (Credit)
+                                </h3>
+                                <p class="pane-desc">Insert banknotes to credit the active user account in
+                                    <code>public.account_log</code>.</p>
+                            </div>
+
+                            <span class="quick-preset-label">Quick Amount Presets:</span>
+                            <div class="amount-presets-grid">
+                                <button class="preset-chip" data-amount="100">+100</button>
+                                <button class="preset-chip" data-amount="500">+500</button>
+                                <button class="preset-chip" data-amount="1000">+1,000</button>
+                                <button class="preset-chip" data-amount="5000">+5,000</button>
+                            </div>
+
+                            <div class="input-field-group">
+                                <label for="credit-amount-input">Credit Amount (BigInt Amount)</label>
+                                <div class="amount-input-box">
+                                    <span class="currency-symbol currency-symbol-tag">₹</span>
+                                    <input type="number" id="credit-amount-input" placeholder="0" min="1" step="1">
+                                </div>
+                            </div>
+
+                            <div class="secondary-input-row">
+                                <div>
+                                    <label for="credit-location-input"
+                                        style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Terminal
+                                        / Location</label>
+                                    <input type="text" id="credit-location-input" class="note-input"
+                                        value="Mumbai ATM Kiosk">
+                                </div>
+                                <div>
+                                    <label
+                                        style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Database
+                                        Operation</label>
+                                    <input type="text" class="note-input" value="INSERT account_log (type: credit)"
+                                        readonly
+                                        style="cursor: not-allowed; color: var(--credit-color); font-weight: 600;">
+                                </div>
+                            </div>
+
+                            <button id="btn-submit-credit" class="submit-action-btn submit-credit-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <path d="M12 19V5M5 12l7-7 7 7" />
+                                </svg>
+                                Accept Cash &amp; Credit Account
+                            </button>
+                        </div>
+
+                        <!-- Tab Pane 2: Withdraw / Debit -->
+                        <div id="debit-pane" class="tab-pane debit-pane">
+                            <div class="pane-heading">
+                                <h3 class="pane-title" style="color: var(--debit-color);">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="8" y1="12" x2="16" y2="12" />
+                                    </svg>
+                                    Cash Withdrawal Terminal (Debit)
+                                </h3>
+                                <p class="pane-desc">Dispense banknotes to log a debit transaction into
+                                    <code>public.account_log</code>.</p>
+                            </div>
+
+                            <span class="quick-preset-label">Fast Cash Presets:</span>
+                            <div class="amount-presets-grid">
+                                <button class="preset-chip" data-amount="100">-100</button>
+                                <button class="preset-chip" data-amount="500">-500</button>
+                                <button class="preset-chip" data-amount="1000">-1,000</button>
+                                <button class="preset-chip" data-amount="2000">-2,000</button>
+                            </div>
+
+                            <div class="input-field-group">
+                                <label for="debit-amount-input">Debit / Withdrawal Amount (BigInt Amount)</label>
+                                <div class="amount-input-box">
+                                    <span class="currency-symbol currency-symbol-tag">₹</span>
+                                    <input type="number" id="debit-amount-input" placeholder="0" min="1" step="1">
+                                </div>
+                            </div>
+
+                            <div class="secondary-input-row">
+                                <div>
+                                    <label for="debit-location-input"
+                                        style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Dispenser
+                                        Location</label>
+                                    <input type="text" id="debit-location-input" class="note-input"
+                                        value="Mumbai ATM Kiosk">
+                                </div>
+                                <div>
+                                    <label
+                                        style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Database
+                                        Operation</label>
+                                    <input type="text" class="note-input" value="INSERT account_log (type: debit)"
+                                        readonly
+                                        style="cursor: not-allowed; color: var(--debit-color); font-weight: 600;">
+                                </div>
+                            </div>
+
+                            <button id="btn-submit-debit" class="submit-action-btn submit-debit-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <path d="M12 5v14M19 12l-7 7-7-7" />
+                                </svg>
+                                Authorize &amp; Dispense Debit Cash
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Cash Dispenser / Feeder Slot Simulation -->
+                    <div class="cash-slot-visual">
+                        <div id="cash-slot" class="slot-opening"></div>
+                        <span id="slot-status-text" class="slot-text">ATM CASSETTE READY</span>
+                    </div>
+
+                </div>
+
             </div>
-          </div>
+        </section>
 
-          <!-- Card Meta Information -->
-          <div class="card-quick-meta">
-            <div class="quick-meta-box">
-              <div class="quick-meta-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-              </div>
-              <div class="quick-meta-details">
-                <span class="quick-meta-label">Total Transactions Logged</span>
-                <span id="total-tx-count-val" class="quick-meta-val">0 Operations</span>
-              </div>
-            </div>
-
-            <div class="quick-meta-box">
-              <div class="quick-meta-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 16 14"/>
-                </svg>
-              </div>
-              <div class="quick-meta-details">
-                <span class="quick-meta-label">Supabase Table Sync</span>
-                <span class="quick-meta-val" style="color: var(--credit-color);">● public.account_log</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Right: Interactive ATM Terminal (Credit & Debit) -->
-        <div class="atm-terminal-panel">
-          
-          <!-- Terminal Tabs -->
-          <div class="terminal-tabs">
-            <button class="terminal-tab-btn active credit-tab" data-tab="credit">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M12 19V5M5 12l7-7 7 7"/>
-              </svg>
-              Deposit (Credit)
-            </button>
-            <button class="terminal-tab-btn debit-tab" data-tab="debit">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M12 5v14M19 12l-7 7-7-7"/>
-              </svg>
-              Withdraw (Debit)
-            </button>
-          </div>
-
-          <div class="terminal-body">
-            
-            <!-- Tab Pane 1: Deposit / Credit -->
-            <div id="credit-pane" class="tab-pane active credit-pane">
-              <div class="pane-heading">
-                <h3 class="pane-title" style="color: var(--credit-color);">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="16"/>
-                    <line x1="8" y1="12" x2="16" y2="12"/>
-                  </svg>
-                  Cash Deposit Terminal (Credit)
-                </h3>
-                <p class="pane-desc">Insert banknotes to credit the active user account in <code>public.account_log</code>.</p>
-              </div>
-
-              <span class="quick-preset-label">Quick Amount Presets:</span>
-              <div class="amount-presets-grid">
-                <button class="preset-chip" data-amount="100">+100</button>
-                <button class="preset-chip" data-amount="500">+500</button>
-                <button class="preset-chip" data-amount="1000">+1,000</button>
-                <button class="preset-chip" data-amount="5000">+5,000</button>
-              </div>
-
-              <div class="input-field-group">
-                <label for="credit-amount-input">Credit Amount (BigInt Amount)</label>
-                <div class="amount-input-box">
-                  <span class="currency-symbol currency-symbol-tag">₹</span>
-                  <input type="number" id="credit-amount-input" placeholder="0" min="1" step="1">
-                </div>
-              </div>
-
-              <div class="secondary-input-row">
-                <div>
-                  <label for="credit-location-input" style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Terminal / Location</label>
-                  <input type="text" id="credit-location-input" class="note-input" value="Mumbai ATM Kiosk">
-                </div>
-                <div>
-                  <label style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Database Operation</label>
-                  <input type="text" class="note-input" value="INSERT account_log (type: credit)" readonly style="cursor: not-allowed; color: var(--credit-color); font-weight: 600;">
-                </div>
-              </div>
-
-              <button id="btn-submit-credit" class="submit-action-btn submit-credit-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M12 19V5M5 12l7-7 7 7"/>
-                </svg>
-                Accept Cash &amp; Credit Account
-              </button>
-            </div>
-
-            <!-- Tab Pane 2: Withdraw / Debit -->
-            <div id="debit-pane" class="tab-pane debit-pane">
-              <div class="pane-heading">
-                <h3 class="pane-title" style="color: var(--debit-color);">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="8" y1="12" x2="16" y2="12"/>
-                  </svg>
-                  Cash Withdrawal Terminal (Debit)
-                </h3>
-                <p class="pane-desc">Dispense banknotes to log a debit transaction into <code>public.account_log</code>.</p>
-              </div>
-
-              <span class="quick-preset-label">Fast Cash Presets:</span>
-              <div class="amount-presets-grid">
-                <button class="preset-chip" data-amount="100">-100</button>
-                <button class="preset-chip" data-amount="500">-500</button>
-                <button class="preset-chip" data-amount="1000">-1,000</button>
-                <button class="preset-chip" data-amount="2000">-2,000</button>
-              </div>
-
-              <div class="input-field-group">
-                <label for="debit-amount-input">Debit / Withdrawal Amount (BigInt Amount)</label>
-                <div class="amount-input-box">
-                  <span class="currency-symbol currency-symbol-tag">₹</span>
-                  <input type="number" id="debit-amount-input" placeholder="0" min="1" step="1">
-                </div>
-              </div>
-
-              <div class="secondary-input-row">
-                <div>
-                  <label for="debit-location-input" style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Dispenser Location</label>
-                  <input type="text" id="debit-location-input" class="note-input" value="Mumbai ATM Kiosk">
-                </div>
-                <div>
-                  <label style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; display: block;">Database Operation</label>
-                  <input type="text" class="note-input" value="INSERT account_log (type: debit)" readonly style="cursor: not-allowed; color: var(--debit-color); font-weight: 600;">
-                </div>
-              </div>
-
-              <button id="btn-submit-debit" class="submit-action-btn submit-debit-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="M12 5v14M19 12l-7 7-7-7"/>
-                </svg>
-                Authorize &amp; Dispense Debit Cash
-              </button>
-            </div>
-
-          </div>
-
-          <!-- Cash Dispenser / Feeder Slot Simulation -->
-          <div class="cash-slot-visual">
-            <div id="cash-slot" class="slot-opening"></div>
-            <span id="slot-status-text" class="slot-text">ATM CASSETTE READY</span>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==============================================
+        <!-- ==============================================
          TRANSACTION HISTORY & STATEMENT LEDGER (account_log)
          ============================================== -->
-    <section id="transactions-section" class="container transactions-section">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
-            Account Transaction Logs (public.account_log)
-          </h2>
-          <p class="section-subtext">Chronological ledger of credit deposits and debit withdrawals for the active user.</p>
-        </div>
+        <section id="transactions-section" class="container transactions-section">
+            <div class="section-header-row">
+                <div>
+                    <h2 class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                        Account Transaction Logs (public.account_log)
+                    </h2>
+                    <p class="section-subtext">Chronological ledger of credit deposits and debit withdrawals for the
+                        active user.</p>
+                </div>
 
-        <div class="history-filter-controls">
-          <button class="filter-btn active" data-filter="all">All Logs</button>
-          <button class="filter-btn filter-credit" data-filter="credit">+ Credits Only</button>
-          <button class="filter-btn filter-debit" data-filter="debit">- Debits Only</button>
-        </div>
-      </div>
+                <div class="history-filter-controls">
+                    <button class="filter-btn active" data-filter="all">All Logs</button>
+                    <button class="filter-btn filter-credit" data-filter="credit">+ Credits Only</button>
+                    <button class="filter-btn filter-debit" data-filter="debit">- Debits Only</button>
+                </div>
+            </div>
 
-      <div class="tx-table-container">
-        <table class="tx-table">
-          <thead>
-            <tr>
-              <th>Log ID &amp; Time (tr_at)</th>
-              <th>User ID (userid)</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Location</th>
-              <th style="text-align: right;">Action</th>
-            </tr>
-          </thead>
-          <tbody id="transactions-body">
-            <!-- Rendered by app.js -->
-          </tbody>
-        </table>
-      </div>
-    </section>
+            <div class="tx-table-container">
+                <table class="tx-table">
+                    <thead>
+                        <tr>
+                            <th>Log ID &amp; Time (tr_at)</th>
+                            <th>User ID (userid)</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Location</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-body">
+                        <!-- Rendered by app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <!-- ==============================================
+        <!-- ==============================================
          SMART ATM FEATURES & SECURITY GUARANTEE
          ============================================== -->
-    <section id="features-section" class="container features-section">
-      <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-        <h2 class="section-title" style="justify-content: center;">Next-Gen Kiosk Engineering</h2>
-        <p class="section-subtext">Engineered for ultra-fast transactions, unmatched reliability, and bank-grade defense.</p>
-      </div>
+        <section id="features-section" class="container features-section">
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <h2 class="section-title" style="justify-content: center;">Next-Gen Kiosk Engineering</h2>
+                <p class="section-subtext">Engineered for ultra-fast transactions, unmatched reliability, and bank-grade
+                    defense.</p>
+            </div>
 
-      <div class="features-grid">
-        <div class="feature-box">
-          <div class="feature-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">Sub-Second Cash Dispense</h3>
-          <p class="feature-desc">Dual optical note counters deliver accurate banknotes in under 3.2 seconds with anti-jam sensor systems.</p>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Sub-Second Cash Dispense</h3>
+                    <p class="feature-desc">Dual optical note counters deliver accurate banknotes in under 3.2 seconds
+                        with anti-jam sensor systems.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                            <path d="M2 12h20" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Multi-Currency FX Engine</h3>
+                    <p class="feature-desc">Seamless auto-conversion across INR, USD, EUR, and GBP at live institutional
+                        foreign exchange rates.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Anti-Skimming AI Guard</h3>
+                    <p class="feature-desc">Infrared slot surveillance and magnetic jitter protection render card
+                        cloning physically impossible.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Banner -->
+        <div class="container">
+            <div class="security-banner">
+                <div class="security-content">
+                    <div class="security-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        PostgreSQL Supabase Connected
+                    </div>
+                    <h3 class="security-title">End-to-End Encrypted Financial Infrastructure</h3>
+                    <p class="security-desc">Every deposit, withdrawal, and balance check is verified with hardware
+                        security modules (HSM) and multi-factor biometric authentication.</p>
+                </div>
+
+                <div class="security-stats">
+                    <div class="security-stat-item">
+                        <span class="sec-stat-num">99.99%</span>
+                        <span class="sec-stat-label">Network Uptime</span>
+                    </div>
+                    <div class="security-stat-item">
+                        <span class="sec-stat-num">0%</span>
+                        <span class="sec-stat-label">ATM Network Fee</span>
+                    </div>
+                    <div class="security-stat-item">
+                        <span class="sec-stat-num">256-Bit</span>
+                        <span class="sec-stat-label">AES Cryptography</span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
 
-        <div class="feature-box">
-          <div class="feature-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
-              <path d="M2 12h20"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">Multi-Currency FX Engine</h3>
-          <p class="feature-desc">Seamless auto-conversion across INR, USD, EUR, and GBP at live institutional foreign exchange rates.</p>
-        </div>
-
-        <div class="feature-box">
-          <div class="feature-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <path d="m9 12 2 2 4-4"/>
-            </svg>
-          </div>
-          <h3 class="feature-title">Anti-Skimming AI Guard</h3>
-          <p class="feature-desc">Infrared slot surveillance and magnetic jitter protection render card cloning physically impossible.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Security Banner -->
-    <div class="container">
-      <div class="security-banner">
-        <div class="security-content">
-          <div class="security-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-            PostgreSQL Supabase Connected
-          </div>
-          <h3 class="security-title">End-to-End Encrypted Financial Infrastructure</h3>
-          <p class="security-desc">Every deposit, withdrawal, and balance check is verified with hardware security modules (HSM) and multi-factor biometric authentication.</p>
-        </div>
-
-        <div class="security-stats">
-          <div class="security-stat-item">
-            <span class="sec-stat-num">99.99%</span>
-            <span class="sec-stat-label">Network Uptime</span>
-          </div>
-          <div class="security-stat-item">
-            <span class="sec-stat-num">0%</span>
-            <span class="sec-stat-label">ATM Network Fee</span>
-          </div>
-          <div class="security-stat-item">
-            <span class="sec-stat-num">256-Bit</span>
-            <span class="sec-stat-label">AES Cryptography</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- ==============================================
+    <!-- ==============================================
        CREATE NEW ACCOUNT MODAL DIALOG
        ============================================== -->
-  <div id="create-account-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="create-account-title">
-    <div class="create-account-card">
-      <button id="close-create-acc-btn" class="modal-close-btn" aria-label="Close Account Modal">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
+    <div id="create-account-modal" class="modal-overlay" role="dialog" aria-modal="true"
+        aria-labelledby="create-account-title">
+        <div class="create-account-card">
+            <button id="close-create-acc-btn" class="modal-close-btn" aria-label="Close Account Modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
 
-      <div class="receipt-header" style="text-align: left; margin-bottom: 16px;">
-        <h3 id="create-account-title" class="receipt-title" style="display: flex; align-items: center; gap: 8px;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--credit-color)" stroke-width="2.5">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="8.5" cy="7" r="4"/>
-            <line x1="20" y1="8" x2="20" y2="14"/>
-            <line x1="23" y1="11" x2="17" y2="11"/>
-          </svg>
-          Open New ATM Account
-        </h3>
-        <p class="receipt-time">Creates a user record in <code>public.user</code> and seeds opening credit in <code>public.account_log</code>.</p>
-      </div>
-
-      <form id="create-account-form">
-        <div class="form-grid">
-          <div class="form-field">
-            <label for="new-user-name">Account Holder Name *</label>
-            <input type="text" id="new-user-name" placeholder="e.g. Rahul Sharma, Priya Mehta" required>
-          </div>
-
-          <div class="form-field">
-            <label for="new-account-no">
-              <span>Account Number * (Unique BigInt)</span>
-            </label>
-            <div class="input-with-button">
-              <input type="number" id="new-account-no" placeholder="e.g. 78492019" required>
-              <button type="button" id="btn-gen-acc-no" class="btn-inline-gen">Generate</button>
+            <div class="receipt-header" style="text-align: left; margin-bottom: 16px;">
+                <h3 id="create-account-title" class="receipt-title"
+                    style="display: flex; align-items: center; gap: 8px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--credit-color)"
+                        stroke-width="2.5">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="8.5" cy="7" r="4" />
+                        <line x1="20" y1="8" x2="20" y2="14" />
+                        <line x1="23" y1="11" x2="17" y2="11" />
+                    </svg>
+                    Open New ATM Account
+                </h3>
+                <p class="receipt-time">Creates a user record in <code>public.user</code> and seeds opening credit in
+                    <code>public.account_log</code>.</p>
             </div>
-          </div>
 
-          <div class="form-field">
-            <label for="new-user-location">Branch / City Location</label>
-            <input type="text" id="new-user-location" placeholder="e.g. Mumbai, Pune, Nashik, Malegaon" value="Mumbai Kiosk">
-          </div>
+            <form id="create-account-form">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="new-user-name">Account Holder Name *</label>
+                        <input type="text" id="new-user-name" placeholder="e.g. Rahul Sharma, Priya Mehta" required>
+                    </div>
 
-          <div class="form-field">
-            <label for="new-initial-credit">Initial Opening Deposit (Credit) ₹ / $</label>
-            <input type="number" id="new-initial-credit" placeholder="0" min="0" step="10" value="1000">
-            <span style="font-size: 0.72rem; color: var(--text-muted);">Will be logged into public.account_log as first credit</span>
-          </div>
+                    <div class="form-field">
+                        <label for="new-account-no">
+                            <span>Account Number * (Unique BigInt)</span>
+                        </label>
+                        <div class="input-with-button">
+                            <input type="number" id="new-account-no" placeholder="e.g. 78492019" required>
+                            <button type="button" id="btn-gen-acc-no" class="btn-inline-gen">Generate</button>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="new-user-location">Branch / City Location</label>
+                        <input type="text" id="new-user-location" placeholder="e.g. Mumbai, Pune, Nashik, Malegaon"
+                            value="Mumbai Kiosk">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="new-initial-credit">Initial Opening Deposit (Credit) ₹ / $</label>
+                        <input type="number" id="new-initial-credit" placeholder="0" min="0" step="10" value="1000">
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">Will be logged into
+                            public.account_log as first credit</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" id="cancel-create-acc-btn" class="btn-secondary"
+                        style="flex: 1; justify-content: center;">
+                        Cancel
+                    </button>
+                    <button type="submit" id="btn-submit-new-account" class="submit-action-btn submit-credit-btn"
+                        style="flex: 2; justify-content: center;">
+                        Create &amp; Issue ATM Card
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <div style="display: flex; gap: 12px; margin-top: 24px;">
-          <button type="button" id="cancel-create-acc-btn" class="btn-secondary" style="flex: 1; justify-content: center;">
-            Cancel
-          </button>
-          <button type="submit" id="btn-submit-new-account" class="submit-action-btn submit-credit-btn" style="flex: 2; justify-content: center;">
-            Create &amp; Issue ATM Card
-          </button>
-        </div>
-      </form>
     </div>
-  </div>
 
-  <!-- ==============================================
+    <!-- ==============================================
        SUPABASE CLOUD CONNECTION MODAL
        ============================================== -->
-  <div id="supabase-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="supabase-modal-title">
-    <div class="receipt-modal-card" style="max-width: 480px;">
-      <button id="cloud-modal-close-btn" class="modal-close-btn" aria-label="Close Cloud Modal">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
+    <div id="supabase-modal" class="modal-overlay" role="dialog" aria-modal="true"
+        aria-labelledby="supabase-modal-title">
+        <div class="receipt-modal-card" style="max-width: 480px;">
+            <button id="cloud-modal-close-btn" class="modal-close-btn" aria-label="Close Cloud Modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
 
-      <div class="receipt-header">
-        <div class="receipt-status-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <ellipse cx="12" cy="5" rx="9" ry="3"/>
-            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-          </svg>
-        </div>
-        <h3 id="supabase-modal-title" class="receipt-title">Supabase Database Connected</h3>
-        <p class="receipt-time">Real-time PostgreSQL Tables Active</p>
-      </div>
+            <div class="receipt-header">
+                <div class="receipt-status-icon"
+                    style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" />
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                    </svg>
+                </div>
+                <h3 id="supabase-modal-title" class="receipt-title">Supabase Database Connected</h3>
+                <p class="receipt-time">Real-time PostgreSQL Tables Active</p>
+            </div>
 
-      <div class="receipt-body">
-        <div class="receipt-line">
-          <span class="label">Project Host</span>
-          <span class="val" style="font-size: 0.78rem;">hzftbwbhxoggqanrswfk.supabase.co</span>
-        </div>
-        <div class="receipt-line">
-          <span class="label">Connected Tables</span>
-          <span class="val" style="color: var(--credit-color);">public.user &amp; public.account_log</span>
-        </div>
-        <div class="receipt-line">
-          <span class="label">Sync Channels</span>
-          <span class="val" style="color: var(--credit-color);">● Active (PostgreSQL Realtime)</span>
-        </div>
-      </div>
+            <div class="receipt-body">
+                <div class="receipt-line">
+                    <span class="label">Project Host</span>
+                    <span class="val" style="font-size: 0.78rem;">hzftbwbhxoggqanrswfk.supabase.co</span>
+                </div>
+                <div class="receipt-line">
+                    <span class="label">Connected Tables</span>
+                    <span class="val" style="color: var(--credit-color);">public.user &amp; public.account_log</span>
+                </div>
+                <div class="receipt-line">
+                    <span class="label">Sync Channels</span>
+                    <span class="val" style="color: var(--credit-color);">● Active (PostgreSQL Realtime)</span>
+                </div>
+            </div>
 
-      <div class="receipt-actions">
-        <button id="cloud-modal-done-btn" class="btn-primary" style="width: 100%; justify-content: center;">
-          Done
-        </button>
-      </div>
+            <div class="receipt-actions">
+                <button id="cloud-modal-done-btn" class="btn-primary" style="width: 100%; justify-content: center;">
+                    Done
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- ==============================================
+    <!-- ==============================================
        RECEIPT MODAL DIALOG
        ============================================== -->
-  <div id="receipt-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-status-title">
-    <div class="receipt-modal-card">
-      <button id="modal-close-btn" class="modal-close-btn" aria-label="Close Receipt Modal">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
+    <div id="receipt-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-status-title">
+        <div class="receipt-modal-card">
+            <button id="modal-close-btn" class="modal-close-btn" aria-label="Close Receipt Modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
 
-      <div class="receipt-header">
-        <div id="modal-status-icon" class="receipt-status-icon success-credit">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M12 19V5M5 12l7-7 7 7"/>
-          </svg>
-        </div>
-        <h3 id="modal-status-title" class="receipt-title">Transaction Receipt</h3>
-        <p id="modal-status-date" class="receipt-time">Just now</p>
-      </div>
+            <div class="receipt-header">
+                <div id="modal-status-icon" class="receipt-status-icon success-credit">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M12 19V5M5 12l7-7 7 7" />
+                    </svg>
+                </div>
+                <h3 id="modal-status-title" class="receipt-title">Transaction Receipt</h3>
+                <p id="modal-status-date" class="receipt-time">Just now</p>
+            </div>
 
-      <div class="receipt-body">
-        <div class="receipt-line">
-          <span class="label">ATM Log ID</span>
-          <span id="modal-tx-id" class="val">#---</span>
-        </div>
-        <div class="receipt-line">
-          <span class="label">Account Holder</span>
-          <span id="modal-user-name" class="val">---</span>
-        </div>
-        <div class="receipt-line">
-          <span class="label">Account Number</span>
-          <span id="modal-user-acc" class="val">•••• ---</span>
-        </div>
-        <div class="receipt-line">
-          <span class="label">Operation Type</span>
-          <span id="modal-tx-type" class="val">CREDIT</span>
-        </div>
-        <div class="receipt-line">
-          <span class="label">Processed Amount</span>
-          <span id="modal-tx-amount" class="val" style="font-size: 1.15rem; font-weight: 800;">₹0.00</span>
-        </div>
-        <div class="receipt-line">
-          <span class="label">Updated Balance</span>
-          <span id="modal-tx-balance" class="val">₹0.00</span>
-        </div>
-      </div>
+            <div class="receipt-body">
+                <div class="receipt-line">
+                    <span class="label">ATM Log ID</span>
+                    <span id="modal-tx-id" class="val">#---</span>
+                </div>
+                <div class="receipt-line">
+                    <span class="label">Account Holder</span>
+                    <span id="modal-user-name" class="val">---</span>
+                </div>
+                <div class="receipt-line">
+                    <span class="label">Account Number</span>
+                    <span id="modal-user-acc" class="val">•••• ---</span>
+                </div>
+                <div class="receipt-line">
+                    <span class="label">Operation Type</span>
+                    <span id="modal-tx-type" class="val">CREDIT</span>
+                </div>
+                <div class="receipt-line">
+                    <span class="label">Processed Amount</span>
+                    <span id="modal-tx-amount" class="val" style="font-size: 1.15rem; font-weight: 800;">₹0.00</span>
+                </div>
+                <div class="receipt-line">
+                    <span class="label">Updated Balance</span>
+                    <span id="modal-tx-balance" class="val">₹0.00</span>
+                </div>
+            </div>
 
-      <div class="receipt-actions">
-        <button id="modal-print-btn" class="btn-secondary" style="flex: 1; justify-content: center;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 6 2 18 2 18 9"/>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-            <rect x="6" y="14" width="12" height="8"/>
-          </svg>
-          Print / Save
-        </button>
-        <button id="modal-done-btn" class="btn-primary" style="flex: 1; justify-content: center;">
-          Done
-        </button>
-      </div>
+            <div class="receipt-actions">
+                <button id="modal-print-btn" class="btn-secondary" style="flex: 1; justify-content: center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9" />
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                        <rect x="6" y="14" width="12" height="8" />
+                    </svg>
+                    Print / Save
+                </button>
+                <button id="modal-done-btn" class="btn-primary" style="flex: 1; justify-content: center;">
+                    Done
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Notification Toast -->
-  <div id="toast" class="toast-notice" role="alert" aria-live="polite">
-    <div id="toast-icon" class="toast-icon"></div>
-    <span id="toast-message" style="font-size: 0.9rem; font-weight: 600;">Action completed successfully</span>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-content">
-      <div class="brand">
-        <div class="brand-icon" style="width: 32px; height: 32px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <rect x="2" y="5" width="20" height="14" rx="2" />
-            <line x1="2" y1="10" x2="22" y2="10" />
-          </svg>
-        </div>
-        <span class="brand-name" style="font-size: 1.05rem;">NEXUS ATM</span>
-      </div>
-
-      <p class="footer-copy">
-        © 2026 NEXUS Financial Technologies Inc. Tables: public.user &amp; public.account_log.
-      </p>
-
-      <ul class="footer-links">
-        <li><a href="#" class="footer-link">Privacy Policy</a></li>
-        <li><a href="#" class="footer-link">Fee Schedule</a></li>
-        <li><a href="#" class="footer-link">ATM Network Locator</a></li>
-      </ul>
+    <!-- Notification Toast -->
+    <div id="toast" class="toast-notice" role="alert" aria-live="polite">
+        <div id="toast-icon" class="toast-icon"></div>
+        <span id="toast-message" style="font-size: 0.9rem; font-weight: 600;">Action completed successfully</span>
     </div>
-  </footer>
 
-  <!-- Script -->
-  <script src="app.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="brand">
+                <div class="brand-icon" style="width: 32px; height: 32px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                </div>
+                <span class="brand-name" style="font-size: 1.05rem;">NEXUS ATM</span>
+            </div>
+
+            <p class="footer-copy">
+                © 2026 NEXUS Financial Technologies Inc. Tables: public.user &amp; public.account_log.
+            </p>
+
+            <ul class="footer-links">
+                <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                <li><a href="#" class="footer-link">Fee Schedule</a></li>
+                <li><a href="#" class="footer-link">ATM Network Locator</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Script -->
+    <script src="app.js"></script>
 </body>
+
 </html>
