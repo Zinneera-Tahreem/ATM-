@@ -4,7 +4,9 @@
      ========================================= */
   --bg-primary: #f8fafc;
   --bg-secondary: #f1f5f9;
-  --bg-tertiary: #e2e8f0;
+  --bg-tertiary: #e2e8f0;    
+
+  
   --card-bg: rgba(255, 255, 255, 0.95);
   --card-border: rgba(226, 232, 240, 0.95);
   --card-border-hover: rgba(2, 132, 199, 0.35);
